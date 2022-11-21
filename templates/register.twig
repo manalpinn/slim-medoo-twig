@@ -1,0 +1,74 @@
+{% extends 'layout/main.twig' %}
+{% block content %}
+  <div class="container-fluid badan">
+    <div class="row">
+      <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+        <div class="card border-0 shadow rounded-3 my-5">
+          <div class="card-body p-4 p-sm-5">
+            <h5 class="card-title text-center mb-5 fw-light fs-5">
+              Register
+            </h5>
+            <form action="/register" method="POST">
+              <div class="form-floating mb-3">
+                <input type="text"
+                  class="form-control"
+                  id="first_name"
+                  name="first_name"
+                  placeholder="Masukan nama" required />
+                <label for="first_name">First Name</label>
+              </div>
+              <div class="form-floating mb-3">
+                <input type="text"
+                  class="form-control"
+                  id="last_name"
+                  name="last_name"
+                  placeholder="Masukan" required />
+                <label for="last_name">Last Name</label>
+              </div>
+              <div class="form-floating mb-3">
+                <input type="password"
+                  class="form-control"
+                  id="password"
+                  placeholder="Password"
+                  name="password" required/>
+                <label for="password">Password</label>
+              </div>
+              <div class="form-floating mb-3">
+                <select class="form-select"
+                  aria-label="Pilih gender anda"
+                  name="gender" required>
+                   <option selected>Pilih gender anda</option>
+                  <option value="male">
+                    Male
+                  </option>
+                  <option value="female">
+                    female
+                  </option>
+                </select>
+              </div>
+              <div class="form-floating mb-3">
+                <input type="text"
+                  class="form-control"
+                  id="username"
+                  placeholder="Masukan username anda"
+                  name="username"required />
+                <label for="username">username</label>
+              </div>
+              <div class="d-grid mb-2">
+                <button class="btn btn-google btn-login text-uppercase fw-bold"
+                  type="submit">
+                  Register
+                </button>
+              </div>
+              {# <div class="d-grid">
+                <button class="btn btn-facebook btn-login text-uppercase fw-bold" type="submit">
+                  <i class="fab fa-facebook-f me-2"></i> Sign in with Facebook
+                </button>
+              </div> #}
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

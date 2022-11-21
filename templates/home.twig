@@ -1,0 +1,30 @@
+{% extends "layout/main.twig" %}
+{% block content %}
+	<div class="container my-5">
+		<table class="table table-hover table-bordered shadow rounded-3 text-center bg-light">
+			<thead class="table-dark">
+				<tr>
+					<th scope="col">No</th>
+					<th scope="col">Full Name</th>
+					<th scope="col">Username</th>
+					<th scope="col">Gender</th>
+					<th scope="col">Action</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for user in data %}
+					<tr>
+						<th scope="row">{{loop.index}}</th>
+						<td>
+							{{user.first_name|capitalize}}
+							{{user.last_name|capitalize}}
+						</td>
+						<td>{{user.username}}</td>
+						<td>{{user.gender}}</td>
+						<td></td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+{% endblock %}
