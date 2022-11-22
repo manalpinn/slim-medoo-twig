@@ -28,7 +28,7 @@
               </div>
               <hr class="my-4">
               <div class="d-grid mb-2">
-              <a href="/register" class="btn btn-google btn-login text-uppercase fw-bold">Daftar</a>
+              <a href="/register" class="btn btn-google btn-login text-uppercase fw-bold">Register</a>
               </div>
               {# <div class="d-grid">
                 <button class="btn btn-facebook btn-login text-uppercase fw-bold" type="submit">
@@ -41,5 +41,46 @@
       </div>
     </div>
   </div>
+  {% if username == true %}
+<script>
+ Swal.fire({
+  icon: 'error',
+  title: 'Oops...',
+  text: 'Username went wrong!',
+});
+</script>
+{% endif %}
+
+
+ {% if password == true %}
+<script>
+  Swal.fire({
+  icon: 'error',
+  title: 'Oops...',
+  text: 'Password went wrong!',
+});
+</script>
+{% endif %}
+
+ {% if register == true %}
+<script>
+  Swal.fire({
+  icon: 'success',
+  title: 'Your Register work has been saved',
+  showConfirmButton: true,
+})
+</script>
+{% endif %}
+
+{% if logout %}
+	<script>
+		Swal.fire({
+  		icon: 'success',
+  		title: 'Welcomee',
+  		showConfirmButton: true,
+		})
+	</script>
+{% endif %}
+
 {% endblock %}
 

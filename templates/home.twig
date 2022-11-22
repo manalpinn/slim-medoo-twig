@@ -27,4 +27,25 @@
 			</tbody>
 		</table>
 	</div>
+		
+{% if firstLogin %}
+	<script>
+		Swal.fire({
+  		icon: 'success',
+  		title: 'Welcomee',
+  		showConfirmButton: true,
+		})
+	</script>
+{% endif %}
+{% if logout %}
+	<script>
+		Swal.fire({
+  		icon: 'success',
+  		title: 'Welcomee',
+  		showConfirmButton: true,
+		})
+	</script>
+{% endif %}
+
+
 {% endblock %}
