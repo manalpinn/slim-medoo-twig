@@ -7,7 +7,7 @@ class UserController
    public static function index($app, $req, $rsp, array $args)
    {
 
-      $users = $app->db->select('user_details', [
+      $users = $app->db->select('tbl_users', [
          'user_id', 'username', 'first_name', 'last_name', 'gender'
       ]);
       return $app->view->render($rsp, 'login.twig', $users);
@@ -15,7 +15,7 @@ class UserController
 
    public static function login($app, $req, $rsp, array $args)
    {
-      $user = $app->db->get('user_details', [
+      $user = $app->db->get('tbl_users', [
          'username', 'password'
       ], ['username' => $req->getParsedBody()['username']]);
       
@@ -49,14 +49,15 @@ class UserController
    }
 
 
+
    public static function register($app, $req,  $rsp, array $args)
    {
       $data = $req->getParsedBody();
-      $user = $app->db->get('user_details', ['username'], [
+      $user = $app->db->get('tbl_users', ['username'], [
          'username' => $data['username']
       ]);
       if (!$user) {
-         $result = $app->db->insert('user_details', [
+         $result = $app->db->insert('tbl_users', [
             'username' => $data['username'],
             'first_name' => $data['first_name'],
             'last_name' => $data['last_name'],
@@ -71,9 +72,6 @@ class UserController
             ]);
          } else {
             $_SESSION['username'] = $data['username'];
-            
-            //    ]);
-            // $hasLogin = true;
          }
       } else {
          return $app->view->render($rsp, 'register.twig',[

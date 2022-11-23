@@ -39,7 +39,7 @@ return function (App $app) {
         return new Medoo ([
             'database_type' => 'mysql',
             'server' => 'localhost',
-            'database_name' => 'ta_slim',
+            'database_name' => 'tugas_akhir',
             'username' => 'root',
             'password' => ''
         ]);

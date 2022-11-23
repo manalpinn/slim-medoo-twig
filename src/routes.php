@@ -46,6 +46,11 @@ return function (App $app) {
     $app->get('/index', function ($req, $rsp, array $args){
         return HomeController::index($this, $req, $rsp, $args);
     });
+
+
+    $app->post('/create', function ($req, $rsp, array $args){
+        return HomeController::create($this, $req, $rsp, $args);
+    });
     
 
     

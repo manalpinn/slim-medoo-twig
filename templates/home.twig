@@ -1,51 +1,229 @@
-{% extends "layout/main.twig" %}
+{% extends 'layout/main.twig' %}
 {% block content %}
-	<div class="container my-5">
-		<table class="table table-hover table-bordered shadow rounded-3 text-center bg-light">
-			<thead class="table-dark">
-				<tr>
-					<th scope="col">No</th>
-					<th scope="col">Full Name</th>
-					<th scope="col">Username</th>
-					<th scope="col">Gender</th>
-					<th scope="col">Action</th>
-				</tr>
-			</thead>
-			<tbody>
-				{% for user in data %}
-					<tr>
-						<th scope="row">{{loop.index}}</th>
-						<td>
-							{{user.first_name|capitalize}}
-							{{user.last_name|capitalize}}
-						</td>
-						<td>{{user.username}}</td>
-						<td>{{user.gender}}</td>
-						<td></td>
-					</tr>
-				{% endfor %}
-			</tbody>
-		</table>
-	</div>
-		
-{% if firstLogin %}
-	<script>
-		Swal.fire({
-  		icon: 'success',
-  		title: 'Welcomee',
-  		showConfirmButton: true,
-		})
-	</script>
-{% endif %}
-{% if logout %}
-	<script>
-		Swal.fire({
-  		icon: 'success',
-  		title: 'Welcomee',
-  		showConfirmButton: true,
-		})
-	</script>
-{% endif %}
+  <div class="container my-5">
+    <div class="card shadow-lg">
+      <div class="card-header text-center bg-transparent">
+        <h3>
+          DATA
+        </h3>
+      </div>
+      <div class="card-body py-4">
+        <button type="button"
+          class="btn btn-primary my-2"
+          onclick="showModalAdd()">
+          Tambah Data
+        </button>
+        <table id="myTable"
+          class="table table-hover table-bordered table-responsive text-center">
+          <thead class="table-dark">
+            <tr>
+              {# <th scope="col">
+                No
+              </th> #}
+              <th scope="col">
+                Customer Name
+              </th>
+              <th scope="col">
+                Customer City
+              </th>
+              <th scope="col">
+                Working Area
+              </th>
+              <th scope="col">
+                Action
+              </th>
+            </tr>
+          </thead>
+          <tbody id="tbody">
+            {% for datas in data %}
+              <tr id="tr-{{loop.index}}">
+                {# <th scope="row">
+                  {{ loop.index }}
+                </th> #}
+                <td id="cust_name-{{loop.index}}">
+                  {{ datas.cust_name|capitalize }}
+                </td>
+                <td>
+                  {{ datas.cust_city|capitalize }}
+                </td>
+                <td>
+                  {{ datas.working_area|capitalize }}
+                </td>
+                <td>
+                  <button type="button"
+                    value="<?=$student['id'];?>"
+                    class=" btn btn-info btn-sm">
+                    View
+                  </button>
+                  <button type="button"
+                    value="<?=$student['id'];?>"
+                    class="editStudentBtn btn btn-success btn-sm">
+                    Edit
+                  </button>
+                  <button type="button"
+                    value="<?=$student['id'];?>"
+                    class="deleteStudentBtn btn btn-danger btn-sm">
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  {# MODAL #}
+
+  <div class="modal fade"
+    id="modal_add"
+    tabindex="-1"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">
+            Add data
+          </h5>
+          <button type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close">
+
+          </button>
+        </div>
+        <form id="addData">
+          <div class="modal-body">
+            <div id="errorMessage" class="alert alert-warning d-none"></div>
+
+            <div class="mb-3">
+              <label for="">Customer Name</label>
+              <input id="cust_name"
+                type="text"
+                name="cust_name"
+                class="form-control"
+                required autofocus />
+            </div>
+            <div class="mb-3">
+              <label for="">Customer City</label>
+              <input type="text"
+                name="cust_city"
+                class="form-control"
+                required />
+            </div>
+            <div class="mb-3">
+              <label for="">Working Area</label>
+              <input type="text"
+                name="working_area"
+                class="form-control"
+                required />
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal">
+              Close
+            </button>
+            <button type="submit" class="btn btn-primary">Save Data</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  
+
+  {% if firstLogin %}
+    <script>
+      Swal.fire({ icon: 'success', title: 'Welcomee', showConfirmButton: true,
+      })
+    </script>
+  {% endif %}
+  {% if logout %}
+    <script>
+      Swal.fire({ icon: 'success', title: 'Welcomee', showConfirmButton: true,
+      })
+    </script>
+  {% endif %}
+{% endblock %}
 
 
+{% block js%}
+<script>
+showModalAdd = function(){
+  $('#modal_add').modal('show');
+}
+
+$('.modal').on('shown.bs.modal', function() {
+  $(this).find('[autofocus]').focus();
+});
+
+
+// submit data
+  $("#addData").on('submit',function(e){
+    e.preventDefault();
+
+    var formData = new FormData(this);
+    formData.append("add_data", true);
+
+    $.ajax({
+        type: "POST",
+        url: "/create",
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+            
+            var res = jQuery.parseJSON(response);
+            console.log(res);
+            if(res.status == 422) {
+                // $('#errorMessage').removeClass('d-none');
+                // $('#errorMessage').text(res.message);
+
+            }else if(res.status == 200){
+
+              var newData = 
+              '<tr id="tr-{{loop.index}}>'+
+                '<th scope="row">' +
+                  'index ++' +
+                '</th>'+
+                '<td id="cust_name-{{loop.index}}">'+
+                  res.data.cust_name +
+                '</td>'+
+                '<td>'+
+                  res.data.cust_city +
+                '</td>'+
+                '<td>'+
+                  res.data.working_area +
+                '</td>'+
+                '<td>' +
+                  '<button type="button"'+
+                    'class=" btn btn-info btn-sm">'+
+                    'View'+
+                  '</button>' +
+                  '<button type="button"'+
+                    'class=" btn btn-success btn-sm">'+
+                    'View'+
+                  '</button>' +
+                  '<button type="button"'+
+                    'class=" btn btn-danger btn-sm">'+
+                    'View'+
+                  '</button>' +
+
+                '</td>'+
+                '</tr>';
+
+              $('#tbody').append(newData);
+
+            }else if(res.status == 500) {
+                alert(res.message);
+            }
+        }
+    });
+  });
+
+  </script>
 {% endblock %}
