@@ -6,72 +6,134 @@ namespace App\Controller;
 
 class HomeController
 {
-   public static function index($app, $req, $rsp, array $args)
+   // public static function index($app, $req, $rsp, array $args)
+   // {
+   //    $data = $app->db->select('tbl_customer', [
+   //       'cust_code', 'cust_name', 'cust_city', 'working_area'
+   //    ]);
+
+   //    $firstLogin = isset($_SESSION['login']);
+   //    unset($_SESSION['login']);
+
+   //    return $app->view->render($rsp, 'home.twig', [
+   //       "data" => $data,
+   //       'login' => true,
+   //       'firstLogin' => $firstLogin
+
+   //    ]);
+   // }
+
+   public static function index($app, $req, $rsp, $args)
    {
-      $data = $app->db->select('tbl_customer', [
-         'cust_code','cust_name', 'cust_city', 'working_area'
+      $username = $_SESSION['username'];
+
+      $id = $app->db->get('tbl_users', '*', [
+         "username" => $username
       ]);
+      $data = $app->db->select('tbl_customer', [
+         'cust_code', 'cust_name', 'cust_city', 'working_area'
+      ], [
+         'cust_code',
+         'cust_name',
+         'cust_city',
+         'working_area',
+      ]);
+      // var_dump($data);
 
-      $firstLogin = isset($_SESSION['login']);
-      unset($_SESSION['login']);
-
-      return $app->view->render($rsp, 'home.twig', [
-         "data" => $data,
-         'login' => true,
-         'firstLogin' => $firstLogin
-
+      $app->view->render($rsp, 'home.twig', [
+         'username' => $_SESSION['username'],
+         'id'     => $id,
+         'data'   => $data,
       ]);
    }
 
    public static function create($app, $req, $rsp, array $args)
    {
-      $data = $req->getParsedBody();
-      $customer = $app->db->get('tbl_customer', ['cust_name'], [
-         'cust_name' => $data['cust_name']
+
+      $data = $app->db->insert('tbl_customer','tbl_agents',[
+         'cust_code',
+         'cust_name',
+         'cust_city',
+         'working_area',
+         'agent_name',
+         'phone_no'
       ]);
 
-      if (!$customer) {
-         $lastData = $app->db->count("tbl_customer", "CUST_CODE");
+      return $rsp->withJson($data);
 
-         $lastData += 1;
-         $cust_code = 'C' . str_pad($lastData, 5, '0', STR_PAD_LEFT);
+      $json_data = array(
+         "draw" => intval($req->getParam('draw')),
 
-         $result = $app->db->insert('tbl_customer', [
-            'cust_code' => $cust_code,
-            'cust_name' => $data['cust_name'],
-            'cust_city' => $data['cust_city'],
-            'working_area' => $data['working_area'],
-         ]);
+      );
 
-         if ($result) {
-            $res = [
-               'status' => 200,
-               'data' => [
-                  'cust_name' => $data['cust_name'],
-                  'cust_city' => $data['cust_city'],
-                  'working_area' => $data['working_area'],
-               ],
-               'message' => 'Student Created Successfully'
-            ];
-            echo json_encode($res);
-            return;
+      echo json_encode($json_data);
+   }
 
-            var_dump($res);
-         } else {
-            $res = [
-               'status' => 500,
-               'message' => 'Student Not Created'
-            ];
-            echo json_encode($res);
-            return;
-         }
-      } else {
-         $res = [
-            'status' => 500,
-            'message' => 'Data sudah ada'
-         ];
-         echo json_encode($res);
-         return;
+
+
+   public static function show($app, $req, $rsp, $args)
+   {
+
+      $data = $app->db->select('tbl_customer', [
+         'cust_code', 'cust_name', 'cust_city', 'working_area'
+      ]);
+
+
+      $columns = array(
+         0 => 'cust_code',
+      );
+
+      $totaldata = count($data);
+
+      $totalfiltered = $totaldata;
+      $limit = $req->getParam('length');
+      $start = $req->getParam('start');
+      $order = $req->getParam('order');
+      $order = $columns[$order[0]['column']];
+      $dir = $req->getParam('order');
+      $dir = $dir[0]['dir'];
+
+      $conditions = [
+         "LIMIT" => [$start, $limit]
+      ];
+
+      if (!empty($req->getParam('search')['value'])) {
+         $search = $req->getParam('search')['value'];
+         $conditions['tbl_customer.cust_name[~]'] = '%' . $search . '%';
       }
+
+      $customer = $app->db->select('tbl_customer', [
+         'cust_code', 'cust_name', 'cust_city', 'working_area'
+      ], $conditions);
+
+      $data = array();
+
+      if (!empty($customer)) {
+         $no = $req->getParam('start') + 1;
+         foreach ($customer as $c) {
+
+            $datas['no'] = $no . '.';
+            $datas['cust_name'] = $c['cust_name'];
+            $datas['cust_city'] = $c['cust_city'];
+            $datas['working_area'] = $c['working_area'];
+            $datas['action'] = '
+                                 <button type="button" class="btn btn-info item_hapus " data="' . $c['cust_code'] . '">View</button>
+                                 <button type="button" class="btn btn-warning item_edit" data="' . $c['cust_code'] . '">Edit</button> 
+                                 <button type="button" class="btn btn-danger item_hapus " data="' . $c['cust_code'] . '">Delete</button>';
+
+
+            $data[] = $datas;
+            $no++;
+         }
+      }
+
+      $json_data = array(
+         "draw"            => intval($req->getParam('draw')),
+         "recordsTotal"    => intval($totaldata),
+         "recordsFiltered" => intval($totalfiltered),
+         "data"            => $data
+      );
+
+      echo json_encode($json_data);
    }
 }

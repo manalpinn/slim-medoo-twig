@@ -2,140 +2,95 @@
 {% block content %}
   <div class="container my-5">
     <div class="card shadow-lg">
-      <div class="card-header text-center bg-transparent">
-        <h3>
-          DATA
-        </h3>
-      </div>
-      <div class="card-body py-4">
-        <button type="button"
-          class="btn btn-primary my-2"
-          onclick="showModalAdd()">
-          Tambah Data
-        </button>
-        <table id="myTable"
-          class="table table-hover table-bordered table-responsive text-center">
-          <thead class="table-dark">
-            <tr>
-              {# <th scope="col">
-                No
-              </th> #}
-              <th scope="col">
-                Customer Name
-              </th>
-              <th scope="col">
-                Customer City
-              </th>
-              <th scope="col">
-                Working Area
-              </th>
-              <th scope="col">
-                Action
-              </th>
-            </tr>
-          </thead>
-          <tbody id="tbody">
-            {% for datas in data %}
-              <tr id="tr-{{loop.index}}">
-                {# <th scope="row">
-                  {{ loop.index }}
-                </th> #}
-                <td id="cust_name-{{loop.index}}">
-                  {{ datas.cust_name|capitalize }}
-                </td>
-                <td>
-                  {{ datas.cust_city|capitalize }}
-                </td>
-                <td>
-                  {{ datas.working_area|capitalize }}
-                </td>
-                <td>
-                  <button type="button"
-                    value="<?=$student['id'];?>"
-                    class=" btn btn-info btn-sm">
-                    View
-                  </button>
-                  <button type="button"
-                    value="<?=$student['id'];?>"
-                    class="editStudentBtn btn btn-success btn-sm">
-                    Edit
-                  </button>
-                  <button type="button"
-                    value="<?=$student['id'];?>"
-                    class="deleteStudentBtn btn btn-danger btn-sm">
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
+        <div class="card-header text-center bg-transparent">
+            <h3>
+                DATA
+            </h3>
+        </div>
+        <div class="card-body py-4">
+            <button type="button" class="btn btn-primary my-2" onclick="showModalAdd()">
+                Tambah Data
+            </button>
+            <div class="table-responsive-md">
+                <table id="myTable" class="table table-hover table-bordered table-responsive text-center">
+                    <thead class="table-dark">
+                        <tr>
+                            <th scope="col">
+                                No
+                            </th>
+                            <th scope="col">
+                                Customer Name
+                            </th>
+                            <th scope="col">
+                                Customer City
+                            </th>
+                            <th scope="col">
+                                Working Area
+                            </th>
+                            <th scope="col">
+                                Action
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody">
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
-  </div>
+</div>
 
   {# MODAL #}
 
-  <div class="modal fade"
-    id="modal_add"
-    tabindex="-1"
-    aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
+<div class="modal fade" id="modal_add" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">
-            Add data
-          </h5>
-          <button type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-            aria-label="Close">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    Add data
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
 
-          </button>
+                </button>
+            </div>
+            <form id="addData" action="/create" method="post">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="">Customer Name</label>
+                        <input id="cust_name" type="text" name="cust_name" class="form-control" required autofocus />
+                    </div>
+                    <div class="mb-3">
+                        <label for="">Customer City</label>
+                        <input id="cust_city" type="text" name="cust_city" class="form-control" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="">Working Area</label>
+                        <input id="working_area" type="text" name="working_area" class="form-control" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="">Agent Name</label>
+                        <input id="agent_name" type="text" name="agent_name" class="form-control" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for=""> Phone</label>
+                        <input id="phone_no" type="text" name="phone_no" class="form-control" required />
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Close
+                    </button>
+                    <button type="submit" class="btn btn-primary">Save Data</button>
+                </div>
+            </form>
         </div>
-        <form id="addData">
-          <div class="modal-body">
-            <div id="errorMessage" class="alert alert-warning d-none"></div>
-
-            <div class="mb-3">
-              <label for="">Customer Name</label>
-              <input id="cust_name"
-                type="text"
-                name="cust_name"
-                class="form-control"
-                required autofocus />
-            </div>
-            <div class="mb-3">
-              <label for="">Customer City</label>
-              <input type="text"
-                name="cust_city"
-                class="form-control"
-                required />
-            </div>
-            <div class="mb-3">
-              <label for="">Working Area</label>
-              <input type="text"
-                name="working_area"
-                class="form-control"
-                required />
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal">
-              Close
-            </button>
-            <button type="submit" class="btn btn-primary">Save Data</button>
-          </div>
-        </form>
-      </div>
     </div>
-  </div>
+</div>
 
-  
 
+{% block alert %}
   {% if firstLogin %}
     <script>
       Swal.fire({ icon: 'success', title: 'Welcomee', showConfirmButton: true,
@@ -148,7 +103,12 @@
       })
     </script>
   {% endif %}
+
 {% endblock %}
+  
+{% endblock %}
+
+
 
 
 {% block js%}
@@ -161,69 +121,172 @@ $('.modal').on('shown.bs.modal', function() {
   $(this).find('[autofocus]').focus();
 });
 
+$(document).ready(function () {
+initTable = function(){
+            table = $("#myTable").on('preXhr.dt', function ( e, settings, data ) {
+                
+    
+                }).on( 'draw.dt', function () {
+                    
+    
+                }).DataTable({
+                "columnDefs": [
+                    { "width": "5%", "targets": 0, className: "text-start","orderable": false },
+                    { "width": "25%", "targets": 1, className: "text-start","orderable": false },
+                    { "width": "25%", "targets": 2,className: "text-start","orderable": false },
+                    { "width": "25%", "targets": 3, className: "text-start","orderable": false },
+                    { "width": "30%", "targets": 4, className: "text-start","orderable": false },
+                    
+                ],
+                'pageLength': 10,
+                'processing': true,
+                'serverSide': true,
+                'serverMethod': 'get',
+                'ajax': {
+                    'url':"/show",
+                    'dataType:':'json',
+                    'type':'get',
+                },
+                'columns': [
+                    { 'data': 'no' },
+                    { 'data': 'cust_name' },
+                    { 'data': 'cust_city' },
+                    { 'data': 'working_area' },
+                    { 'data': 'action' },
+                       
+                ]
+            });
+            
+        }
+
+        initTable();
+
+
+  $('#saveBtn').on('click', function () {
+            var cust_name = $('#cust_name').val();
+            var cust_city = $('#cust_city').val();
+            var working_area = $('#working_area').val();
+            var agent_name = $('#agent_name').val();
+            var phone_no = $('#agent_name').val();
+            $.ajax({
+                type: "POST",
+                url: "/create",
+                dataType: "JSON",
+                data: { cust_name: cust_name, cust_city: cust_city, working_area: working_area , agent_name: agent_name, phone_no : phone_no},
+                success: function (data) {
+                    if (data) {
+                        $('#modalaAdd').modal('hide');
+                        let timerInterval
+                        Swal.fire({
+                            title: 'Memuat Data...',
+                            html: 'Tunggu  <b></b>  Detik.',
+                            timer: 300,
+                            timerProgressBar: true,
+                            didOpen: () => {
+                                Swal.showLoading()
+                                const b = Swal.getHtmlContainer().querySelector('b')
+                                timerInterval = setInterval(() => {
+                                    b.textContent = Swal.getTimerLeft()
+                                }, 100)
+                            },
+                            willClose: () => {
+                                clearInterval(timerInterval)
+                            }
+                        }).then((result) => {
+                            Swal.fire(
+                                {
+                                    icon: 'success',
+                                    title: 'Berhasil',
+                                    text: 'Data telah ditambahkan.',
+                                    //footer: '<a href="">Why do I have this issue?</a>'
+                                }
+                                
+                                )
+                                $('#ModalaAdd').on('hidden.bs.modal', function(){
+                                    $(this).find('form')[0].reset();
+                                 });
+                              table.draw(false)
+                            })
+                            
+                          } else {
+                            Swal.fire({
+                              icon: 'error',
+                              title: 'Oops...',
+                              text: 'Ada yang eror!',
+                              //footer: '<a href="">Why do I have this issue?</a>'
+                            })
+                          }
+                   
+                }
+            });
+            return false;
+        });
+    
+});
+
 
 // submit data
-  $("#addData").on('submit',function(e){
-    e.preventDefault();
+//   $("#addData").on('submit',function(e){
+//     e.preventDefault();
 
-    var formData = new FormData(this);
-    formData.append("add_data", true);
+//     var formData = new FormData(this);
+//     formData.append("add_data", true);
 
-    $.ajax({
-        type: "POST",
-        url: "/create",
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: function (response) {
-            
-            var res = jQuery.parseJSON(response);
-            console.log(res);
-            if(res.status == 422) {
-                // $('#errorMessage').removeClass('d-none');
-                // $('#errorMessage').text(res.message);
+//     $.ajax({
+//         type: "POST",
+//         url: "/create",
+//         data: formData,
+//         processData: false,
+//         contentType: false,
+//         success: function (response) {
+          
+//           var res = jQuery.parseJSON(response);
+//           var newData = 
+//           '<tr id="tr-{{loop.index}}>'+
+//             '<th scope="row">' +
+//               '{{loop.index}}' +
+//             '</th>'+
+//             '<td id="cust_name-{{loop.index}}">'+
+//               res.data.cust_name +
+//             '</td>'+
+//             '<td>'+
+//               res.data.cust_city +
+//             '</td>'+
+//             '<td>'+
+//               res.data.working_area +
+//             '</td>'+
+//             '<td>' +
+//               '<button type="button"'+
+//                 'class=" btn btn-info btn-sm">'+
+//                 'View'+
+//               '</button> | ' +
+//               '<button type="button"'+
+//                 'class=" btn btn-success btn-sm">'+
+//                 'Edit'+
+//               '</button> | ' +
+//               '<button type="button"'+
+//                 'class=" btn btn-danger btn-sm">'+
+//                 'Delete'+
+//               '</button>' +
 
-            }else if(res.status == 200){
+//             '</td>'+
+//             '</tr>';
+//             console.log(res);
+//             if(res.status == 422) {
+//                 // $('#errorMessage').removeClass('d-none');
+//                 // $('#errorMessage').text(res.message);
 
-              var newData = 
-              '<tr id="tr-{{loop.index}}>'+
-                '<th scope="row">' +
-                  'index ++' +
-                '</th>'+
-                '<td id="cust_name-{{loop.index}}">'+
-                  res.data.cust_name +
-                '</td>'+
-                '<td>'+
-                  res.data.cust_city +
-                '</td>'+
-                '<td>'+
-                  res.data.working_area +
-                '</td>'+
-                '<td>' +
-                  '<button type="button"'+
-                    'class=" btn btn-info btn-sm">'+
-                    'View'+
-                  '</button>' +
-                  '<button type="button"'+
-                    'class=" btn btn-success btn-sm">'+
-                    'View'+
-                  '</button>' +
-                  '<button type="button"'+
-                    'class=" btn btn-danger btn-sm">'+
-                    'View'+
-                  '</button>' +
+//             }else if(res.status == 200){
 
-                '</td>'+
-                '</tr>';
 
-              $('#tbody').append(newData);
-
-            }else if(res.status == 500) {
-                alert(res.message);
-            }
-        }
-    });
-  });
+//               $('#tbody').append(newData);
+//  $('#modal_add').modal('hide');
+//             }else if(res.status == 500) {
+//                 alert(res.message);
+//             }
+//         }
+//     });
+//   });
 
   </script>
 {% endblock %}

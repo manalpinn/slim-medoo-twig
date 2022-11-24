@@ -78,7 +78,7 @@ class UserController
             'error'=>true]);
          // return $rsp->withRedirect('/auth/register');
        }
-      return $rsp->withRedirect('/login');
+      return $rsp->withRedirect('/log');
       //  else {
       //    // $app->flash->addMessage('errors', 'username telah terdaftar');
       //    return $app->view->render($rsp, 'register.twig',[
