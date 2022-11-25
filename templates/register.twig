@@ -5,16 +5,19 @@
       <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
         <div class="card border-0 shadow rounded-3 my-5">
           <div class="card-body p-4 p-sm-5">
-            <h5 class="card-title text-center mb-5 fw-light fs-5">
-              Register
-            </h5>
+            <div class="card-title text-center mb-5 fw-light fs-5">
+              <h5>
+                Register
+              </h5>
+            </div>
             <form action="/register" method="POST">
               <div class="form-floating mb-3">
                 <input type="text"
                   class="form-control"
                   id="first_name"
                   name="first_name"
-                  placeholder="Masukan nama" required />
+                  placeholder="Masukan nama"
+                  required />
                 <label for="first_name">First Name</label>
               </div>
               <div class="form-floating mb-3">
@@ -22,7 +25,8 @@
                   class="form-control"
                   id="last_name"
                   name="last_name"
-                  placeholder="Masukan" required />
+                  placeholder="Masukan"
+                  required />
                 <label for="last_name">Last Name</label>
               </div>
               <div class="form-floating mb-3">
@@ -30,14 +34,18 @@
                   class="form-control"
                   id="password"
                   placeholder="Password"
-                  name="password" required/>
+                  name="password"
+                  required />
                 <label for="password">Password</label>
               </div>
               <div class="form-floating mb-3">
                 <select class="form-select"
                   aria-label="Pilih gender anda"
-                  name="gender" required>
-                   <option selected>Pilih gender anda</option>
+                  name="gender"
+                  required>
+                  <option selected>
+                    Pilih gender anda
+                  </option>
                   <option value="male">
                     Male
                   </option>
@@ -51,7 +59,8 @@
                   class="form-control"
                   id="username"
                   placeholder="Masukan username anda"
-                  name="username"required />
+                  name="username"
+                  required />
                 <label for="username">username</label>
               </div>
               <div class="d-grid mb-2">
@@ -71,13 +80,10 @@
       </div>
     </div>
   </div>
-   {% if error == true %}
-<script>
-  Swal.fire({
-  icon: 'error',
-  title: 'Oops...',
-  text: 'Something went wrong!',
-});
-</script>
-{% endif %}
+  {% if error == true %}
+    <script>
+      Swal.fire({ icon: 'error', title: 'Oops...', text: 'Something went
+      wrong!', });
+    </script>
+  {% endif %}
 {% endblock %}

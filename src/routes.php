@@ -50,13 +50,54 @@ return function (App $app) {
 
 
     $app->post('/create', function ($req, $rsp, array $args){
-        return HomeController::create($this, $req, $rsp, $args);
-    });
+        $tambah = $req->getParsedBody();
+        // return var_dump($tambah);
+        return HomeController::create($this, $req, $rsp,  [
+            'tambah' => $tambah
+        ]);    });
 
     $app->get('/show', function ($req, $rsp, array $args){
         return HomeController::show($this, $req, $rsp, $args);
     });
-    
 
+    $app->get('/export', function ($req, $rsp, array $args){
+        return HomeController::export($this, $req, $rsp, $args);
+    });
+
+    $app->post('/delete', function (Request $request, Response $response, array $args) {
+        $data = $request->getParsedBody();
+
+        return HomeController::delete($this, $request, $response,  [
+            'data' => $data
+        ]);
+    });
+    
+    
+    // $app->get('/detail', function ($req, $rsp, array $args){
+    //     return HomeController::detail($this, $req, $rsp, $args);
+    // });
+
+    $app->get('/{cust_code}/select', function (Request $request, Response $response, array $args) use ($container) {
+        $data = $args['cust_code'];
+        $search = $container->db->select("tbl_customer",[
+            "[><]tbl_agent"=>"AGENT_CODE"
+        ],'*',[
+            "CUST_CODE"=>$data,
+            "ORDER"=> "CUST_CODE"
+        ]);
+
+        return $response->withJson($search);
+
+        return HomeController::ubah_modal($this, $request, $response,  [
+            'data' => $data
+        ]);
+    });
+
+    $app->post('/ubah', function (Request $request, Response $response, array $args) use ($container) {
+        $data = $request->getParsedBody();
+        return HomeController::ubah_data($this, $request, $response,  [
+            'data' => $data
+        ]);
+    });
     
 };

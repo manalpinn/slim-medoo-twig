@@ -1,0 +1,23 @@
+<table class="text-center" border="1">
+    <thead class="text-center">
+        <tr>
+            <th>No</th>
+            <th>Customer Code</th>
+            <th>Customer Name</th>
+            <th>Customer City</th>
+            <th>Working Area</th>
+        </tr>
+    </thead>
+    <tbody class="text-center">
+        {% for exp in data %}
+        <tr>
+        
+            <td>{{loop.index}}</td>
+            <td>{{exp.cust_code}}</td>
+            <td>{{exp.cust_name}}</td>
+            <td>{{exp.cust_city}}</td>
+            <td>{{exp.working_area}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

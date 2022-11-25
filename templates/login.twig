@@ -1,18 +1,32 @@
-{% extends "layout/log_res.twig" %}
+{% extends 'layout/log_res.twig' %}
 {% block content %}
-<div class="container-fluid badan">
+  <div class="container-fluid badan">
     <div class="row">
       <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
         <div class="card border-0 shadow rounded-3 my-5">
           <div class="card-body p-4 p-sm-5">
-            <h5 class="card-title text-center mb-5 fw-light fs-5">Sign In</h5>
+            <div class="card-title text-center mb-5 fw-light fs-5">
+              <h5>
+                Login
+              </h5>
+            </div>
             <form action="/login" method="post">
               <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="username" name="username" placeholder="name@example.com" required>
+                <input type="text"
+                  class="form-control"
+                  id="username"
+                  name="username"
+                  placeholder="name@example.com"
+                  required />
                 <label for="username">Username</label>
               </div>
               <div class="form-floating mb-3">
-                <input type="password" class="form-control" id="password" placeholder="Password" name="password" required>
+                <input type="password"
+                  class="form-control"
+                  id="password"
+                  placeholder="Password"
+                  name="password"
+                  required />
                 <label for="password">Password</label>
               </div>
 
@@ -23,12 +37,17 @@
                 </label>
               </div> #}
               <div class="d-grid">
-                <button class="btn btn-danger btn-login text-uppercase fw-bold" type="submit">Sign
-                  in</button>
+                <button class="btn btn-danger btn-login text-uppercase fw-bold"
+                  type="submit">
+                  Login
+                </button>
               </div>
-              <hr class="my-4">
+              <hr class="my-4" />
               <div class="d-grid mb-2">
-              <a href="/reg" class="btn btn-warning btn-login text-uppercase fw-bold">Register</a>
+                <a href="/reg"
+                  class="btn btn-warning btn-login text-uppercase fw-bold">
+                  Register
+                </a>
               </div>
               {# <div class="d-grid">
                 <button class="btn btn-facebook btn-login text-uppercase fw-bold" type="submit">
@@ -42,45 +61,30 @@
     </div>
   </div>
   {% if username == true %}
-<script>
- Swal.fire({
-  icon: 'error',
-  title: 'Oops...',
-  text: 'Username went wrong!',
-});
-</script>
-{% endif %}
+    <script>
+      Swal.fire({ icon: 'error', title: 'Oops...', text: 'Username went wrong!',
+      });
+    </script>
+  {% endif %}
 
+  {% if password == true %}
+    <script>
+      Swal.fire({ icon: 'error', title: 'Oops...', text: 'Password went wrong!',
+      });
+    </script>
+  {% endif %}
 
- {% if password == true %}
-<script>
-  Swal.fire({
-  icon: 'error',
-  title: 'Oops...',
-  text: 'Password went wrong!',
-});
-</script>
-{% endif %}
+  {% if register == true %}
+    <script>
+      Swal.fire({ icon: 'success', title: 'Your Register work has been saved',
+      showConfirmButton: true, })
+    </script>
+  {% endif %}
 
- {% if register == true %}
-<script>
-  Swal.fire({
-  icon: 'success',
-  title: 'Your Register work has been saved',
-  showConfirmButton: true,
-})
-</script>
-{% endif %}
-
-{% if logout %}
-	<script>
-		Swal.fire({
-  		icon: 'success',
-  		title: 'Welcomee',
-  		showConfirmButton: true,
-		})
-	</script>
-{% endif %}
-
+  {% if logout %}
+    <script>
+      Swal.fire({ icon: 'success', title: 'Welcomee', showConfirmButton: true,
+      })
+    </script>
+  {% endif %}
 {% endblock %}
-
