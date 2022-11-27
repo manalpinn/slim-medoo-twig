@@ -1,474 +1,220 @@
 {% extends 'layout/main.twig' %}
 {% block content %}
-  <div class="container my-5">
-    <div class="card shadow-lg">
-        <div class="card-header text-center bg-transparent">
-            <h3>
-                DATA
-            </h3>
-        </div>
-        <div class="card-body py-4">
-            <button type="button" class="btn btn-primary my-2" onclick="showModalAdd()"><i class="bi bi-person-plus-fill"></i>&nbsp;
-                Add Data
-            </button>
-            <a href="/export" class="btn btn-success ms-1"><i class="bi bi-file-earmark-spreadsheet-fill"></i>&nbsp;Export Excel</a>
+	<div class="container my-5">
+		<div class="card shadow-lg">
+			<div class="card-header text-center bg-transparent">
+				<h3>
+					DATA CUSTOMER
+				</h3>
+			</div>
+			<div class="card-body py-4">
+				<button type="button" class="btn btn-primary my-2" onclick="showModalAdd()">
+					<i class="bi bi-person-plus-fill"></i>&nbsp;
+						                Add Data
+				</button>
+				<a href="/export" class="btn btn-success ms-1">
+					<i class="bi bi-file-earmark-spreadsheet-fill"></i>&nbsp;Export Excel</a>
 
-            <div class="table-responsive-md">
-                <table id="myTable" class="table table-hover table-bordered table-responsive text-center">
-                    <thead class="table-dark">
-                        <tr>
-                            <th scope="col">
-                                No
-                            </th>
-                            <th scope="col">
-                                Customer Name
-                            </th>
-                            <th scope="col">
-                                Customer City
-                            </th>
-                            <th scope="col">
-                                Working Area
-                            </th>
-                            <th scope="col">
-                                Action
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody id="tbody">
+				<div class="table-responsive-md">
+					<table id="myTable" class="table table-hover table-bordered table-responsive text-center">
+						<thead class="table-dark">
+							<tr>
+								<th scope="col">
+									No
+								</th>
+								<th scope="col">
+									Customer Name
+								</th>
+								<th scope="col">
+									Customer City
+								</th>
+								<th scope="col">
+									Customer Country
+								</th>
+								<th scope="col">
+									Action
+								</th>
+							</tr>
+						</thead>
+						<tbody id="tbody"></tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
 
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
+	{# MODAL #}
 
-  {# MODAL #}
+	<div class="modal fade" id="modal_add" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">
+						Add data
+					</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<form id="addData">
+					<div class="modal-body">
+						<div class="mb-3">
+							<label for="">Customer Name</label>
+							<input id="cust_name" type="text" name="cust_name" class="form-control" required autofocus/>
+						</div>
+						<div class="mb-3">
+							<label for="">Customer City</label>
+							<input id="cust_city" type="text" name="cust_city" class="form-control" required/>
+						</div>
+						<div class="mb-3">
+							<label for="">Customer Country</label>
+							<input id="cust_country" type="text" name="cust_country" class="form-control" required/>
+						</div>
+						<div class="mb-3">
+							<label for="agentcode" class="form-label">Agent</label>
+							<select class="form-select" id="agent_code" aria-label="Default select example" name="agent_code" required>
+								<option selected>Select Agent</option>
+								{% for agent in agents %}
+									<option value="{{agent.agent_code}}">{{agent.agent_name}}</option>
+								{% endfor %}
+							</select>
+						</div>
+					</div>
 
-<div class="modal fade" id="modal_add" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">
-                    Add data
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-
-                </button>
-            </div>
-            <form id="addData">
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="">Customer Name</label>
-                        <input id="cust_name" type="text" name="cust_name" class="form-control" required autofocus />
-                    </div>
-                    <div class="mb-3">
-                        <label for="">Customer City</label>
-                        <input id="cust_city" type="text" name="cust_city" class="form-control" required />
-                    </div>
-                    <div class="mb-3">
-                        <label for="">Working Area</label>
-                        <input id="working_area" type="text" name="working_area" class="form-control" required />
-                    </div>
-
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        Close
-                    </button>
-                    <button type="button" class="btn btn-primary" id="saveBtn">Save Data</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-
-
-<div class="modal fade" id="ModalEdit" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">
-                    Edit data
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-
-                </button>
-            </div>
-            <form>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="">Customer Name</label>
-                        <input type="text" class="form-control " name="cust_code" id="cust_code" hidden>
-                        <input id="cust_name" type="text" name="cust_name" class="form-control" required autofocus />
-                    </div>
-                    <div class="mb-3">
-                        <label for="">Customer City</label>
-                        <input id="cust_city" type="text" name="cust_city" class="form-control" required />
-                    </div>
-                    <div class="mb-3">
-                        <label for="">Working Area</label>
-                        <input id="working_area" type="text" name="working_area" class="form-control" required />
-                    </div>
-
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        Close
-                    </button>
-                    <button type="button" class="btn btn-primary" id="btn_update">Save Data</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+							Close
+						</button>
+						<button type="button" class="btn btn-primary" id="saveBtn">Save Data</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
 
 
-<div class="modal fade" id="Detail" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">
-                    Coming Soon
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+	<div class="modal fade" id="ModalEdit" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">
+						Edit data
+					</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<form>
+					<div class="modal-body">
+						<div class="mb-3">
+							<label for="">Customer Name</label>
+							<input type="text" class="form-control " name="cust_code" id="edit_code" hidden>
+							<input id="edit_name" type="text" name="cust_name" class="form-control" required autofocus/>
+						</div>
+						<div class="mb-3">
+							<label for="">Customer City</label>
+							<input id="edit_city" type="text" name="cust_city" class="form-control" required/>
+						</div>
+						<div class="mb-3">
+							<label for="">Customer Country</label>
+							<input id="edit_country" type="text" name="cust_country" class="form-control" required/>
+						</div>
+						<div class="mb-3">
+							<label for="agentcode" class="form-label">AGENT</label>
+							<select class="form-select" id="edit_agent" aria-label="Default select example" name="agent_code" required>
+								<option selected>Select Agent</option>
+								{% for agent in agents %}
+									<option value="{{agent.agent_code}}">{{agent.agent_name}}</option>
+								{% endfor %}
+							</select>
+						</div>
+					</div>
 
-                </button>
-            </div>
-                {# <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="">Customer Name</label>
-                        <input type="text" class="form-control " name="cust_code" id="cust_code" hidden>
-                        <input id="cust_name" type="text" name="cust_name" class="form-control" required autofocus />
-                    </div>
-                    <div class="mb-3">
-                        <label for="">Customer City</label>
-                        <input id="cust_city" type="text" name="cust_city" class="form-control" required/>
-                    </div>
-                    <div class="mb-3">
-                        <label for="">Working Area</label>
-                        <input id="working_area" type="text" name="working_area" class="form-control" required />
-                    </div>
-
-                </div> #}
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        Close
-                    {# </button>
-                    <button type="button" class="btn btn-primary" id="btn_update">Save Data</button> #}
-                </div>
-        </div>
-    </div>
-</div>
-
-
-
-<div class="modal fade" id="ModalHapus" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title" id="myModalLabel">Delete Data</h4>
-      </div>
-      <form class="form-horizontal">
-        <div class="modal-body">
-
-          <input type="hidden" name="kode" id="textkode" value="">
-          <div class="alert alert-danger">
-            <p>Are you sure you want to delete this data?</p>
-          </div>
-
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button class="btn_hapus btn btn-danger" id="btn_hapus">Delete</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+							Close
+						</button>
+						<button type="button" class="btn btn-primary" id="btn_update">Save Data</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
 
 
+	<div class="modal fade" id="ModalDetail" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">
+						Detail Data
+					</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div class="mb-3">
+						<label class="form-label">Customer Code</label>
+						<input type="text" class="form-control " name="cust_code" disabled>
+					</div>
+					<div class="mb-3">
+						<label class="form-label">Customer Name</label>
+						<input type="text" class="form-control " name="cust_name" disabled>
+					</div>
+					<div class="mb-3">
+						<label class="form-label">Customer City</label>
+						<input type="text" class="form-control " name="cust_city" disabled>
+					</div>
+					<div class="mb-3">
+						<label class="form-label">Agent Name</label>
+						<input type="text" class="form-control " name="agent_name" disabled>
+					</div>
+					<div class="mb-3">
+						<label class="form-label">Agent Work Area</label>
+						<input type="text" class="form-control " name="working_agent" disabled>
+					</div>
+					<div class="mb-3">
+						<label class="form-label">Phone Agent</label>
+						<input type="text" class="form-control " name="phone_agent" disabled>
+					</div>
+				</div>
 
-{% block alert %}
-  {% if firstLogin %}
-    <script>
-      Swal.fire({ icon: 'success', title: 'Welcomee', showConfirmButton: true,
-      })
-    </script>
-  {% endif %}
-  {% if logout %}
-    <script>
-      Swal.fire({ icon: 'success', title: 'Welcomee', showConfirmButton: true,
-      })
-    </script>
-  {% endif %}
-
-{% endblock %}
-  
-{% endblock %}
-
-
-
-
-{% block js%}
-<script>
-showModalAdd = function(){
-  $('#modal_add').modal('show');
-}
-
-$('.modal').on('shown.bs.modal', function() {
-  $(this).find('[autofocus]').focus();
-});
-
-initTable = function(){
-            table = $("#myTable").on('preXhr.dt', function ( e, settings, data ) {
-                
-    
-                }).on( 'draw.dt', function () {
-                    
-    
-                }).DataTable({
-                "columnDefs": [
-                    { "width": "5%", "targets": 0, className: "text-start","orderable": false },
-                    { "width": "25%", "targets": 1, className: "text-start","orderable": false },
-                    { "width": "25%", "targets": 2,className: "text-start","orderable": false },
-                    { "width": "25%", "targets": 3, className: "text-start","orderable": false },
-                    { "width": "30%", "targets": 4, className: "text-start","orderable": false },
-                    
-                ],
-                'pageLength': 10,
-                'processing': true,
-                'serverSide': true,
-                'serverMethod': 'get',
-                'ajax': {
-                    'url':"/show",
-                    'dataType:':'json',
-                    'type':'get',
-                },
-                'columns': [
-                    { 'data': 'no' },
-                    { 'data': 'cust_name' },
-                    { 'data': 'cust_city' },
-                    { 'data': 'working_area' },
-                    { 'data': 'action' },
-                       
-                ]
-            });
-            
-        }
-
-        initTable();
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+						Close
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
 
 
-  $('#saveBtn').on('click', function () {
-            var cust_name = $('#cust_name').val();
-            var cust_city = $('#cust_city').val();
-            var working_area = $('#working_area').val();
-            $.ajax({
-                type: "POST",
-                url: "/create",
-                dataType: "JSON",
-                data: {cust_name: cust_name, cust_city: cust_city, working_area: working_area},
-                success: function (data) {
-                    if (data) {
-                       
-                        let timerInterval
-                        Swal.fire({
-                            title: 'Memuat Data...',
-                            html: 'Tunggu  <b></b>  Detik.',
-                            timer: 300,
-                            timerProgressBar: true,
-                            didOpen: () => {
-                                Swal.showLoading()
-                                const b = Swal.getHtmlContainer().querySelector('b')
-                                timerInterval = setInterval(() => {
-                                    b.textContent = Swal.getTimerLeft()
-                                }, 100)
-                            },
-                            willClose: () => {
-                                clearInterval(timerInterval)
-                            }
-                            
-                        }).then((result) => {
-                            Swal.fire(
-                                {
-                                    icon: 'success',
-                                    title: 'Berhasil',
-                                    text: 'Data telah ditambahkan.',
-                                    //footer: '<a href="">Why do I have this issue?</a>'
-                                }
-                                
-                                )
-                                $('#modalaAdd').on('hidden.bs.modal', function(){
-                                    $(this).find('form')[0].reset();
-                                 });
+	<div class="modal fade" id="ModalHapus" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" id="myModalLabel">Delete Data</h4>
+				</div>
+				<form class="form-horizontal">
+					<div class="modal-body">
 
-                              table.draw(false)
-                            })
+						<input type="hidden" name="kode" id="textkode" value="">
+						<div class="alert alert-danger">
+							<p>Are you sure you want to delete this data?</p>
+						</div>
 
-                             $('#modal_add').modal('hide');
-                            
-                          } else {
-                            Swal.fire({
-                              icon: 'error',
-                              title: 'Oops...',
-                              text: 'Ada yang eror!',
-                              //footer: '<a href="">Why do I have this issue?</a>'
-                            })
-                          }
-                   
-                }
-            });
-            return false;
-        });
-    
-
-    $('#tbody').on('click', '.item_hapus', function () {
-            var id = $(this).attr('data');
-            $('#ModalHapus').modal('show');
-            $('[name="kode"]').val(id);
-        });
-
-        
-    $('#btn_hapus').on('click', function () {
-            var kode = $('#textkode').val();
-            $.ajax({
-                type: "POST",
-                url: "/delete",
-                dataType: "JSON",
-                data: { kode: kode },
-                success: function (data) {
-                    if (data) {
-                        $('#ModalHapus').modal('hide');
-                        let timerInterval
-                        Swal.fire({
-                            title: 'Memuat Data...',
-                            html: 'Tunggu  <b></b>  Detik.',
-                            timer: 300,
-                            timerProgressBar: true,
-                            didOpen: () => {
-                                Swal.showLoading()
-                                const b = Swal.getHtmlContainer().querySelector('b')
-                                timerInterval = setInterval(() => {
-                                    b.textContent = Swal.getTimerLeft()
-                                }, 100)
-                            },
-                            willClose: () => {
-                                clearInterval(timerInterval)
-                            }
-                        }).then((result) => {
-                            Swal.fire(
-                                {
-                                    icon: 'success',
-                                    title: 'Berhasil',
-                                    text: 'Data telah dihapus.',
-                                    //footer: '<a href="">Why do I have this issue?</a>'
-                                }
-
-                            )
-                        })
-
-                        table.draw(false)
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: 'Ada yang eror!',
-                            //footer: '<a href="">Why do I have this issue?</a>'
-                        })
-                    }
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+						<button class="btn_hapus btn btn-danger" id="btn_hapus">Delete</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
 
 
+	{% block alert %}
+		{% if firstLogin %}
+			<script>
+				Swal.fire({icon: 'success', title: 'Welcome Back  {{ username }}&#128075;', showConfirmButton: true})
+			</script>
+		{% endif %}
+	{% endblock %}
 
-                    //tampil_data_barang();
-                }
-            });
-            return false;
-        });
-
-
-        // $('#tbody').on('click', '.item_edit', function () {
-        //     var cust_code = $(this).attr('data');
-        //     $.ajax({
-        //         type: "GET",
-        //         url: "/" + cust_code + "/select",
-        //         dataType: "JSON",
-        //         data: { cust_code: cust_code },
-        //         success: function (data) {
-        //             $.each(data, function (cust_code, cust_name, jenis_kelamin) {
-        //                 $('#ModalEdit').modal('show');
-        //                 $('[name="cust_code"]').val(data[0].cust_code);
-        //                 $('[name="cust_name"]').val(data[0].cust_name);
-        //                 $('[name="cust_city"]').val(data[0].cust_city);
-        //                 $('[name="working_area"]').val(data[0].working_area);
-                        
-        //             });
-        //         }
-        //     });
-        //     return false;
-        // });
-
-
-        // $('#btn_update').click(function (e) {
-        //     var cust_code = $('#cust_code').val();
-        //     var cust_name = $('#cust_name').val();
-        //     var cust_city = $('#cust_city').val();
-        //     var working_area = $('#working_area').val();
-        //     $.ajax({
-        //         type: "POST",
-        //         url: "/ubah",
-        //         dataType: "JSON",
-        //         data: { cust_code : cust_code, cust_name: cust_name, cust_city: cust_city, working_area: working_area},
-        //         success: function (data) {
-        //             if (data) {
-        //                 $('#ModalEdit').modal('hide');
-        //                 let timerInterval
-        //                 Swal.fire({
-        //                     title: 'Memuat Data...',
-        //                     html: 'Tunggu  <b></b>  Detik.',
-        //                     timer: 300,
-        //                     timerProgressBar: true,
-        //                     didOpen: () => {
-        //                         Swal.showLoading()
-        //                         const b = Swal.getHtmlContainer().querySelector('b')
-        //                         timerInterval = setInterval(() => {
-        //                             b.textContent = Swal.getTimerLeft()
-        //                         }, 100)
-        //                     },
-        //                     willClose: () => {
-        //                         clearInterval(timerInterval)
-        //                     }
-        //                 }).then((result) => {
-        //                     Swal.fire(
-        //                         {
-        //                             icon: 'success',
-        //                             title: 'Berhasil',
-        //                             text: 'Data telah diubah.',
-        //                             //footer: '<a href="">Why do I have this issue?</a>'
-        //                         }
-
-        //                     )
-        //                 })
-
-        //                 table.draw(false)
-        //             } else {
-        //                 Swal.fire({
-        //                     icon: 'error',
-        //                     title: 'Oops...',
-        //                     text: 'Ada yang eror!',
-        //                     //footer: '<a href="">Why do I have this issue?</a>'
-        //                 })
-        //             }
-        //         }
-        //     });
-        //     return false;
-        // });
-
-
-
-  </script>
 {% endblock %}

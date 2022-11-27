@@ -6,44 +6,31 @@ namespace App\Controller;
 
 class HomeController
 {
-   // public static function index($app, $req, $rsp, array $args)
-   // {
-   //    $data = $app->db->select('tbl_customer', [
-   //       'cust_code', 'cust_name', 'cust_city', 'working_area'
-   //    ]);
-
-   //    $firstLogin = isset($_SESSION['login']);
-   //    unset($_SESSION['login']);
-
-   //    return $app->view->render($rsp, 'home.twig', [
-   //       "data" => $data,
-   //       'login' => true,
-   //       'firstLogin' => $firstLogin
-
-   //    ]);
-   // }
-
    public static function index($app, $req, $rsp, $args)
    {
       $username = $_SESSION['username'];
 
-      $id = $app->db->get('tbl_users', '*', [
-         "username" => $username
-      ]);
+      $firstLogin = isset($_SESSION['login']);
+      unset($_SESSION['login']);
+
+
       $data = $app->db->select('tbl_customer', [
-         'cust_code', 'cust_name', 'cust_city', 'working_area'
+         'cust_code', 'cust_name', 'cust_city', 'cust_country'
       ], [
          'cust_code',
          'cust_name',
          'cust_city',
-         'working_area',
+         'cust_country'
       ]);
       // var_dump($data);
+      $agents = $app->db->select('tbl_agents', ['agent_code', 'agent_name', 'working_agent', 'phone_agent']);
 
       $app->view->render($rsp, 'home.twig', [
          'username' => $_SESSION['username'],
-         'id'     => $id,
          'data'   => $data,
+         'agents' => $agents,
+         'login' => true,
+         'firstLogin' => $firstLogin
       ]);
    }
 
@@ -53,28 +40,25 @@ class HomeController
       $data = $req->getParsedBody();
 
       $lastData = $app->db->count('tbl_customer', 'cust_code');
-      
-      $lastData += 5;
+
+      $lastData += 2;
       $cust_code = 'C' . str_pad($lastData, 5, '0', STR_PAD_LEFT);
       // return var_dump($cust_code);
       $reg = $args['tambah'];
-      // $app->db->debug()->insert('tbl_customers', $reg
-      // );
-      // return var_dump($reg);
-      $ins = $app->db->insert('tbl_customer', [
+
+      $app->db->insert('tbl_customer', [
          'CUST_CODE' => $cust_code,
          'cust_name' => $data['cust_name'],
          'cust_city' => $data['cust_city'],
-         'working_area' => $data['working_area']
+         'cust_country' => $data['cust_country'],
+         'agent_code' => $data['agent_code'],
       ]);
 
-      // return var_dump($ins);
       $json_data = array(
          "draw" => intval($req->getParam('draw')),
       );
 
       echo json_encode($json_data);
-      // return $rsp->withRedirect('/index');
    }
 
 
@@ -83,7 +67,7 @@ class HomeController
    {
 
       $data = $app->db->select('tbl_customer', [
-         'cust_code', 'cust_name', 'cust_city', 'working_area'
+         'cust_code', 'cust_name', 'cust_city', 'cust_country'
       ]);
 
 
@@ -111,7 +95,7 @@ class HomeController
       }
 
       $customer = $app->db->select('tbl_customer', [
-         'cust_code', 'cust_name', 'cust_city', 'working_area'
+         'cust_code', 'cust_name', 'cust_city', 'cust_country'
       ], $conditions);
 
       $data = array();
@@ -123,9 +107,9 @@ class HomeController
             $datas['no'] = $no . '.';
             $datas['cust_name'] = $c['cust_name'];
             $datas['cust_city'] = $c['cust_city'];
-            $datas['working_area'] = $c['working_area'];
+            $datas['cust_country'] = $c['cust_country'];
             $datas['action'] = '
-                                 <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#Detail"><i class="bi bi-info-circle-fill"></i></button> | 
+                                 <button type="button" class="btn btn-info item_detail" data="' . $c['cust_code'] . '"><i class="bi bi-info-circle-fill"></i></button> | 
                                  <button type="button" class="btn btn-warning item_edit" data="' . $c['cust_code'] . '"><i class="bi bi-pencil-square"></i></button> |
                                  <button type="button" class="btn btn-danger item_hapus" data="' . $c['cust_code'] . '"><i class="bi bi-trash-fill"></i></button>';
 
@@ -155,7 +139,6 @@ class HomeController
          "cust_code" => $id
       ]);
 
-      // return $rsp->withJson($del);
       $json_data = array(
          "draw"            => intval($req->getParam('draw')),
       );
@@ -170,10 +153,11 @@ class HomeController
 
 
       $select = $app->db->select('tbl_customer', [
-         'cust_code', 'cust_name', 'cust_city', 'working_area'
+         'cust_code', 'cust_name', 'cust_city', 'cust_country', 'agent_code'
+      ], [
+         "cust_code" => $cust_code
       ]);
       return $rsp->withJson($select);
-      // return $rsp->withJson($data);
 
    }
 
@@ -185,15 +169,18 @@ class HomeController
       $cust_code = $reg['cust_code'];
       $cust_name = $reg['cust_name'];
       $cust_city = $reg['cust_city'];
-      $working_area = $reg['working_area'];
+      $cust_country = $reg['cust_country'];
+      $agent_code = $reg['agent_code'];
 
       $app->db->update('tbl_customer', [
          'cust_name' => $cust_name,
          'cust_city' => $cust_city,
-         'working_area' => $working_area,
+         'cust_country' => $cust_country,
+         'agent_code' => $agent_code
       ], [
          'cust_code' => $cust_code
       ]);
+      // return var_dump($update);
       $json_data = array(
          "draw"            => intval($req->getParam('draw')),
       );
@@ -201,17 +188,17 @@ class HomeController
       echo json_encode($json_data);
    }
 
-   // public static function detail($app, $req, $rsp, $args)
-   // {
-   //   $id = $args['id'];
-   //   $data = $app->db->get('customer', '*', ['CUST_CODE' => $id]);
-   // //   return $app->get('renderer')->render($rsp, 'see.phtml', array('data' => $data));
-   // }
 
    public static function export($app, $req, $rsp, $args)
    {
-      $data =$app->db->select('tbl_customer', [
-         'cust_code', 'cust_name', 'cust_city', 'working_area'
+      $data = $app->db->select('tbl_customer', ["[><]tbl_agents" => ["agent_code" => "agent_code"]], [
+         'cust_code',
+         'cust_name',
+         'cust_city',
+         'cust_country',
+         'agent_name',
+         'working_agent',
+         'phone_agent'
       ]);
 
 
@@ -221,9 +208,31 @@ class HomeController
       header("Content-type: application/vnd-ms-excel");
       header("Content-Disposition: attachment; filename=Data.xls");
 
-      $app->view->render($rsp, 'export.twig',[
+      $app->view->render($rsp, 'export.twig', [
          'data' => $data
       ]);
    }
-   
+
+   public static function detail($app, $req, $rsp, $args)
+   {
+      $cust_code = $args['data'];
+
+
+
+      $select = $app->db->select('tbl_customer', ["[><]tbl_agents" => ["agent_code" => "agent_code"]], [
+         'cust_code',
+         'cust_name',
+         'cust_city',
+         'cust_country',
+         'agent_name',
+         'working_agent',
+         'phone_agent'
+      ], [
+         "cust_code" => $cust_code
+      ]);
+
+      return $rsp->withJson($select);
+      // return $rsp->withJson($data);
+
+   }
 }

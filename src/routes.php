@@ -21,10 +21,8 @@ return function (App $app) {
         return  $this->view->render($rsp, 'login.twig',['register'=>true] ,$args);
     });
 
+    
     $app->get('/logout', function ($req, $rsp, array $args){
-        return  $this->view->render($rsp, 'home.twig',['logout'=>true] ,$args);
-    })->add(new Auth());
-    $app->post('/logout', function ($req, $rsp, array $args){
         session_destroy();
         return $rsp->withRedirect('/');
     });
@@ -79,20 +77,13 @@ return function (App $app) {
 
     $app->get('/{cust_code}/select', function (Request $request, Response $response, array $args) use ($container) {
         $data = $args['cust_code'];
-        $search = $container->db->select("tbl_customer",[
-            "[><]tbl_agent"=>"AGENT_CODE"
-        ],'*',[
-            "CUST_CODE"=>$data,
-            "ORDER"=> "CUST_CODE"
-        ]);
-
-        return $response->withJson($search);
-
+        
         return HomeController::ubah_modal($this, $request, $response,  [
             'data' => $data
         ]);
     });
 
+   
     $app->post('/ubah', function (Request $request, Response $response, array $args) use ($container) {
         $data = $request->getParsedBody();
         return HomeController::ubah_data($this, $request, $response,  [
@@ -100,4 +91,12 @@ return function (App $app) {
         ]);
     });
     
+
+    $app->get('/{cust_code}/detail', function (Request $request, Response $response, array $args) use ($container) {
+        $data = $args['cust_code'];
+        
+        return HomeController::detail($this, $request, $response,  [
+            'data' => $data
+        ]);
+    });
 };

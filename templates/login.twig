@@ -2,13 +2,13 @@
 {% block content %}
   <div class="container-fluid badan">
     <div class="row">
-      <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+      <div class="col-sm-9 col-md-7 col-lg-4 mx-auto">
         <div class="card border-0 shadow rounded-3 my-5">
           <div class="card-body p-4 p-sm-5">
             <div class="card-title text-center mb-5 fw-light fs-5">
-              <h5>
+              <h4>
                 Login
-              </h5>
+              </h4>
             </div>
             <form action="/login" method="post">
               <div class="form-floating mb-3">
@@ -37,7 +37,7 @@
                 </label>
               </div> #}
               <div class="d-grid">
-                <button class="btn btn-danger btn-login text-uppercase fw-bold"
+                <button class="btn btn-danger btn-login text-uppercase fw-bold rounded-5"
                   type="submit">
                   Login
                 </button>
@@ -45,7 +45,7 @@
               <hr class="my-4" />
               <div class="d-grid mb-2">
                 <a href="/reg"
-                  class="btn btn-warning btn-login text-uppercase fw-bold">
+                  class="btn btn-warning btn-login text-uppercase fw-bold rounded-5">
                   Register
                 </a>
               </div>
@@ -81,7 +81,7 @@
     </script>
   {% endif %}
 
-  {% if logout %}
+  {% if logout == true %}
     <script>
       Swal.fire({ icon: 'success', title: 'Welcomee', showConfirmButton: true,
       })
