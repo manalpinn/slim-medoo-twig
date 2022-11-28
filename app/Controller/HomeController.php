@@ -158,7 +158,6 @@ class HomeController
          "cust_code" => $cust_code
       ]);
       return $rsp->withJson($select);
-
    }
 
    public static function ubah_data($app, $req, $rsp, $args)
